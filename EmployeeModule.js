@@ -1,0 +1,1 @@
+﻿var employeeModule = angular.module('employeeModule', []);

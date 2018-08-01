@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="APPDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Building">
+          <Key>
+            <PropertyRef Name="BuildingID" />
+          </Key>
+          <Property Name="BuildingID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BuildingName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JobDepartment">
+          <Key>
+            <PropertyRef Name="JobDepartmentID" />
+          </Key>
+          <Property Name="JobDepartmentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobTitle" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="JobTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JobRole">
+          <Key>
+            <PropertyRef Name="JobTypeID" />
+          </Key>
+          <Property Name="JobTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobTypeRole" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ManagerID" Type="int" />
+          <Property Name="BuildingID" Type="int" Nullable="false" />
+          <Property Name="JobDepartmentId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'APPDB.dbo.vwEmployeeDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwEmployeeDetails">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="FullName" />
+            <PropertyRef Name="ManagerID" />
+            <PropertyRef Name="ManagerName" />
+            <PropertyRef Name="JobTitle" />
+            <PropertyRef Name="JobTypeRole" />
+            <PropertyRef Name="NuildingAddress" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="101" Nullable="false" />
+          <Property Name="ManagerID" Type="int" Nullable="false" />
+          <Property Name="ManagerName" Type="nvarchar" MaxLength="101" Nullable="false" />
+          <Property Name="JobTitle" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="JobTypeRole" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NuildingAddress" Type="nvarchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_JobDepartment_JobRole">
+          <End Role="JobRole" Type="Self.JobRole" Multiplicity="1" />
+          <End Role="JobDepartment" Type="Self.JobDepartment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobRole">
+              <PropertyRef Name="JobTypeID" />
+            </Principal>
+            <Dependent Role="JobDepartment">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Building">
+          <End Role="Building" Type="Self.Building" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Building">
+              <PropertyRef Name="BuildingID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="BuildingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_JobDepartment">
+          <End Role="JobDepartment" Type="Self.JobDepartment" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobDepartment">
+              <PropertyRef Name="JobDepartmentID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="JobDepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="User1" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="User1">
+              <PropertyRef Name="ManagerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="APPDBModelStoreContainer">
+          <EntitySet Name="Building" EntityType="Self.Building" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JobDepartment" EntityType="Self.JobDepartment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JobRole" EntityType="Self.JobRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vwEmployeeDetails" EntityType="Self.vwEmployeeDetails" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwEmployeeDetails].[UserID] AS [UserID], 
+    [vwEmployeeDetails].[FullName] AS [FullName], 
+    [vwEmployeeDetails].[ManagerID] AS [ManagerID], 
+    [vwEmployeeDetails].[ManagerName] AS [ManagerName], 
+    [vwEmployeeDetails].[JobTitle] AS [JobTitle], 
+    [vwEmployeeDetails].[JobTypeRole] AS [JobTypeRole], 
+    [vwEmployeeDetails].[NuildingAddress] AS [NuildingAddress]
+    FROM [dbo].[vwEmployeeDetails] AS [vwEmployeeDetails]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_JobDepartment_JobRole" Association="Self.FK_JobDepartment_JobRole">
+            <End Role="JobRole" EntitySet="JobRole" />
+            <End Role="JobDepartment" EntitySet="JobDepartment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Building" Association="Self.FK_User_Building">
+            <End Role="Building" EntitySet="Building" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_JobDepartment" Association="Self.FK_User_JobDepartment">
+            <End Role="JobDepartment" EntitySet="JobDepartment" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_User" Association="Self.FK_User_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="User1" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="APPDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Building">
+          <Key>
+            <PropertyRef Name="BuildingID" />
+          </Key>
+          <Property Name="BuildingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BuildingName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_User_Building" FromRole="Building" ToRole="User" />
+        </EntityType>
+        <EntityType Name="JobDepartment">
+          <Key>
+            <PropertyRef Name="JobDepartmentID" />
+          </Key>
+          <Property Name="JobDepartmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JobTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="JobRole" Relationship="Self.FK_JobDepartment_JobRole" FromRole="JobDepartment" ToRole="JobRole" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_User_JobDepartment" FromRole="JobDepartment" ToRole="User" />
+        </EntityType>
+        <EntityType Name="JobRole">
+          <Key>
+            <PropertyRef Name="JobTypeID" />
+          </Key>
+          <Property Name="JobTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobTypeRole" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="JobDepartments" Relationship="Self.FK_JobDepartment_JobRole" FromRole="JobRole" ToRole="JobDepartment" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ManagerID" Type="Int32" />
+          <Property Name="BuildingID" Type="Int32" Nullable="false" />
+          <Property Name="JobDepartmentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Building" Relationship="Self.FK_User_Building" FromRole="User" ToRole="Building" />
+          <NavigationProperty Name="JobDepartment" Relationship="Self.FK_User_JobDepartment" FromRole="User" ToRole="JobDepartment" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_User_User" FromRole="User" ToRole="User1" />
+          <NavigationProperty Name="User2" Relationship="Self.FK_User_User" FromRole="User1" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_User_Building">
+          <End Role="Building" Type="Self.Building" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Building">
+              <PropertyRef Name="BuildingID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="BuildingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_JobDepartment_JobRole">
+          <End Role="JobRole" Type="Self.JobRole" Multiplicity="1" />
+          <End Role="JobDepartment" Type="Self.JobDepartment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobRole">
+              <PropertyRef Name="JobTypeID" />
+            </Principal>
+            <Dependent Role="JobDepartment">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_JobDepartment">
+          <End Role="JobDepartment" Type="Self.JobDepartment" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobDepartment">
+              <PropertyRef Name="JobDepartmentID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="JobDepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="User1" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="User1">
+              <PropertyRef Name="ManagerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="APPDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Buildings" EntityType="Self.Building" />
+          <EntitySet Name="JobDepartments" EntityType="Self.JobDepartment" />
+          <EntitySet Name="JobRoles" EntityType="Self.JobRole" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_User_Building" Association="Self.FK_User_Building">
+            <End Role="Building" EntitySet="Buildings" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobDepartment_JobRole" Association="Self.FK_JobDepartment_JobRole">
+            <End Role="JobRole" EntitySet="JobRoles" />
+            <End Role="JobDepartment" EntitySet="JobDepartments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_JobDepartment" Association="Self.FK_User_JobDepartment">
+            <End Role="JobDepartment" EntitySet="JobDepartments" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_User" Association="Self.FK_User_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="User1" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="vwEmployeeDetails" EntityType="APPDBModel.vwEmployeeDetail" />
+        </EntityContainer>
+        <EntityType Name="vwEmployeeDetail">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="FullName" />
+            <PropertyRef Name="ManagerName" />
+            <PropertyRef Name="JobTitle" />
+            <PropertyRef Name="JobTypeRole" />
+            <PropertyRef Name="NuildingAddress" />
+            <PropertyRef Name="ManagerID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="FullName" Type="String" Nullable="false" MaxLength="101" FixedLength="false" Unicode="true" />
+          <Property Name="ManagerName" Type="String" Nullable="false" MaxLength="101" FixedLength="false" Unicode="true" />
+          <Property Name="JobTitle" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="JobTypeRole" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NuildingAddress" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ManagerID" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="APPDBModelStoreContainer" CdmEntityContainer="APPDBEntities">
+          <EntitySetMapping Name="Buildings">
+            <EntityTypeMapping TypeName="APPDBModel.Building">
+              <MappingFragment StoreEntitySet="Building">
+                <ScalarProperty Name="BuildingID" ColumnName="BuildingID" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JobDepartments">
+            <EntityTypeMapping TypeName="APPDBModel.JobDepartment">
+              <MappingFragment StoreEntitySet="JobDepartment">
+                <ScalarProperty Name="JobDepartmentID" ColumnName="JobDepartmentID" />
+                <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
+                <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JobRoles">
+            <EntityTypeMapping TypeName="APPDBModel.JobRole">
+              <MappingFragment StoreEntitySet="JobRole">
+                <ScalarProperty Name="JobTypeID" ColumnName="JobTypeID" />
+                <ScalarProperty Name="JobTypeRole" ColumnName="JobTypeRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="APPDBModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+                <ScalarProperty Name="BuildingID" ColumnName="BuildingID" />
+                <ScalarProperty Name="JobDepartmentId" ColumnName="JobDepartmentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwEmployeeDetails">
+            <EntityTypeMapping TypeName="APPDBModel.vwEmployeeDetail">
+              <MappingFragment StoreEntitySet="vwEmployeeDetails">
+                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+                <ScalarProperty Name="NuildingAddress" ColumnName="NuildingAddress" />
+                <ScalarProperty Name="JobTypeRole" ColumnName="JobTypeRole" />
+                <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
+                <ScalarProperty Name="ManagerName" ColumnName="ManagerName" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

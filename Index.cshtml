@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Employee Details";
+}
+
+<div ng-app="employeeModule" ng-controller="employeeController">
+    <div class="container">
+        <table class="table table-bordered">
+            <tr>
+                <th>
+                    Full Name
+                </th>
+                <th>
+                    Manager Name
+                </th>
+                <th>
+                    Job Title
+                </th>
+                <th>
+                    Job Type Role
+                </th>
+                <th>
+                </th>
+            </tr>
+            <tr ng-repeat="employee in employees">
+                <td>
+                    <span ng-bind="employee.FullName"></span>
+                </td>
+                <td>
+                    <span ng-hide="employee.editMode" ng-bind="employee.ManagerName"></span>
+
+                    <select ng-model="employee.ManagerID" ng-show="employee.editMode">
+                        <option ng-selected="employee.ManagerID == item.ID"
+                                ng-repeat="item in managers"
+                                ng-value="item.ID">
+                            {{item.Name}}
+                        </option>
+                    </select>
+
+                </td>
+                <td>
+                    <span ng-bind="employee.JobTitle"></span>
+                </td>
+                <td>
+                    <span ng-bind="employee.JobTypeRole"></span>
+                </td>
+                <td>
+                    <span ng-show="employee.editMode">
+                        <a href="#" ng-click="saveEmployee(employee)">Save</a> |
+                        <a href="#" ng-click="toggleEdit(employee)">Cancel</a>
+                    </span>
+                    <a ng-hide="employee.editMode" href="#" ng-click="toggleEdit(employee)">Edit</a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div id="ajax-div" ng-show="loading">
+        <img src="Content/Images/Loading.gif" class="ajax-loader" />
+    </div>
+</div>
